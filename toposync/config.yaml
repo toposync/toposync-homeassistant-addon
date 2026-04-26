@@ -1,5 +1,5 @@
 name: Toposync
-version: "0.3.5"
+version: "0.3.6"
 slug: toposync
 description: Run Toposync inside Home Assistant with ingress and internal Core API access.
 url: https://github.com/toposync/toposync-homeassistant-addon
@@ -9,11 +9,15 @@ panel_title: Toposync
 panel_icon: mdi:vector-polyline
 panel_admin: true
 ingress: true
-ingress_port: 18756
+ingress_port: 18757
 ingress_stream: true
 homeassistant_api: true
+ports:
+  18756/tcp: null
+ports_description:
+  18756/tcp: Toposync web interface and API for direct access and mobile apps.
 arch:
   - amd64
   - aarch64
-watchdog: http://[HOST]:[PORT:18756]/api/health
+watchdog: http://[HOST]:[PORT:18757]/api/health
 schema: false

@@ -11,6 +11,7 @@ Run Toposync inside Home Assistant with a sidebar app and automatic access to th
 - Connect to the internal Home Assistant Core API automatically.
 - Store persistent Toposync data in the add-on data directory.
 - Run under Home Assistant supervision and watchdog health checks.
+- Optionally expose a direct Toposync port for mobile apps and local-network access.
 
 ## After Installation
 
@@ -18,4 +19,12 @@ Start the add-on and open `Toposync` from the Home Assistant sidebar. The Home A
 
 ## Access
 
-The add-on is visible to Home Assistant administrators. Direct access to the internal Toposync service is restricted to Home Assistant ingress.
+The add-on is visible to Home Assistant administrators in the Home Assistant sidebar. Sidebar access is handled by Home Assistant ingress.
+
+## Direct Access
+
+By default, Toposync is available through Home Assistant ingress only. To use a mobile app or direct browser access on the local network, open the add-on `Network` settings and map container port `18756/tcp` to a host port such as `18756`.
+
+Direct access uses Toposync local authentication. The initial local user is not created from the public first-access screen while the add-on runs in hybrid mode; create/manage local users from inside Toposync through the Home Assistant sidebar or by editing the add-on data configuration.
+
+The direct port is served through a local proxy that strips Home Assistant ingress identity headers before forwarding requests to Toposync.

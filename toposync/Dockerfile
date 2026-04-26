@@ -1,7 +1,7 @@
 ARG BUILD_ARCH
 FROM python:3.12-slim-bookworm
 
-ARG TOPOSYNC_PIP_SPEC=toposync==0.3.5
+ARG TOPOSYNC_PIP_SPEC=toposync==0.3.6
 ARG TOPOSYNC_PIP_INDEX_URL=https://pypi.org/simple
 ARG TOPOSYNC_EXTRA_INDEX_URL=
 ARG TOPOSYNC_APT_PACKAGES=
@@ -27,7 +27,7 @@ RUN /bin/sh -lc '\
 
 COPY run_addon.py /usr/local/bin/run_addon.py
 
-EXPOSE 18756
+EXPOSE 18756 18757
 VOLUME ["/data"]
 
 ENTRYPOINT ["tini", "-s", "--"]
