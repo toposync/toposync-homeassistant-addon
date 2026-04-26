@@ -1,5 +1,7 @@
 # Toposync Home Assistant Add-on
 
+![Toposync](logo.png)
+
 Run Toposync inside Home Assistant with a sidebar app and automatic access to the Home Assistant Core API.
 
 ## Features
