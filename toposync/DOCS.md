@@ -1,14 +1,18 @@
 # Toposync
 
-This add-on runs Toposync inside Home Assistant with:
+TopoSync runs inside Home Assistant as a supervised add-on.
 
-- sidebar entry through ingress
-- supervised execution
-- internal access to the Home Assistant Core API
-- frontend and API served on the same internal port
+## What You Get
 
-## Notes
+- A Toposync entry in the Home Assistant sidebar.
+- UI and API access through Home Assistant ingress.
+- Automatic connection to the internal Home Assistant Core API.
+- Persistent application data stored in `/data`.
 
-- Access is restricted to Home Assistant ingress requests.
-- The add-on uses the Supervisor token automatically; no manual Home Assistant host or API key is required inside Toposync.
-- Persistent application data is stored in `/data`.
+## Usage
+
+Start the add-on, then open `Toposync` from the sidebar. The Home Assistant extension is configured automatically by the add-on runtime.
+
+## Access
+
+The sidebar entry is restricted to Home Assistant administrators. The internal Toposync service is intended to be accessed through Home Assistant ingress.
