@@ -14,8 +14,14 @@ ingress_stream: true
 homeassistant_api: true
 ports:
   18756/tcp: null
+  18758/tcp: null
+  18759/tcp: null
+  18760/tcp: null
 ports_description:
   18756/tcp: Toposync web interface and API for direct access and mobile apps.
+  18758/tcp: Toposync RTSP streaming output.
+  18759/tcp: Toposync HLS streaming output.
+  18760/tcp: Toposync WebRTC/WHEP streaming output.
 arch:
   - amd64
   - aarch64

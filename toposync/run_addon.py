@@ -1,19 +1,41 @@
 from __future__ import annotations
 
+import asyncio
 import json
 import os
 import subprocess
 import threading
+from copy import deepcopy
 from pathlib import Path
+from typing import Any
 
 from fastapi import FastAPI, Request
 from starlette.responses import StreamingResponse
 
 
 OPTIONS_PATH = Path("/data/options.json")
+
+# Keep the add-on in a project-owned port range instead of MediaMTX defaults.
 DIRECT_PROXY_PORT = 18756
 BACKEND_PORT = 18757
+STREAMING_RTSP_PORT = 18758
+STREAMING_HLS_PORT = 18759
+STREAMING_WEBRTC_PORT = 18760
+STREAMING_API_PORT = 18761
 BACKEND_BASE_URL = f"http://127.0.0.1:{BACKEND_PORT}"
+STREAMING_EXTENSION_ID = "com.toposync.streaming"
+STREAMING_DEFAULT_PORTS = {
+    "rtsp": STREAMING_RTSP_PORT,
+    "hls": STREAMING_HLS_PORT,
+    "webrtc": STREAMING_WEBRTC_PORT,
+    "api": STREAMING_API_PORT,
+}
+STREAMING_LEGACY_DEFAULT_PORTS = {
+    "rtsp": 8554,
+    "hls": 8888,
+    "webrtc": 8889,
+    "api": 9997,
+}
 
 _HOP_BY_HOP_HEADERS = {
     "connection",
@@ -39,7 +61,7 @@ def _load_options() -> dict[str, object]:
         if not OPTIONS_PATH.is_file():
             return {}
         raw = json.loads(OPTIONS_PATH.read_text(encoding="utf-8"))
-    except Exception:
+    except Exception:  # noqa: BLE001
         return {}
     return raw if isinstance(raw, dict) else {}
 
@@ -48,6 +70,72 @@ def _setdefault_env(key: str, value: str) -> None:
     if os.getenv(key):
         return
     os.environ[key] = value
+
+
+def _as_int(value: Any) -> int | None:
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int):
+        return value
+    try:
+        return int(str(value or "").strip())
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def _merge_streaming_addon_defaults(raw: Any) -> tuple[dict[str, Any], bool]:
+    settings = deepcopy(raw) if isinstance(raw, dict) else {}
+    changed = not isinstance(raw, dict)
+
+    engine = settings.get("engine")
+    if not isinstance(engine, dict):
+        engine = {}
+        settings["engine"] = engine
+        changed = True
+
+    preferred_ports = engine.get("preferred_ports")
+    if not isinstance(preferred_ports, dict):
+        preferred_ports = {}
+        engine["preferred_ports"] = preferred_ports
+        changed = True
+
+    for key, target_port in STREAMING_DEFAULT_PORTS.items():
+        current_port = _as_int(preferred_ports.get(key))
+        legacy_port = STREAMING_LEGACY_DEFAULT_PORTS.get(key)
+        if current_port is None or current_port == legacy_port:
+            if current_port != target_port:
+                preferred_ports[key] = target_port
+                changed = True
+
+    return settings, changed
+
+
+async def _seed_toposync_config_defaults() -> None:
+    try:
+        from toposync.runtime.config_store import AppSettings, ConfigStore, UserDataPaths
+    except Exception as exc:  # noqa: BLE001
+        print(f"Toposync add-on: skipping startup config defaults: {exc}", flush=True)
+        return
+
+    try:
+        paths = UserDataPaths.resolve()
+    except Exception:  # noqa: BLE001
+        paths = UserDataPaths(
+            data_dir=Path("/data"),
+            config_path=Path("/data/config.json"),
+            files_dir=Path("/data/files"),
+        )
+    config_store = ConfigStore(paths=paths)
+    settings = await config_store.get_settings()
+    core = dict(settings.core) if isinstance(settings.core, dict) else {}
+    extensions = dict(settings.extensions) if isinstance(settings.extensions, dict) else {}
+
+    streaming, streaming_changed = _merge_streaming_addon_defaults(
+        extensions.get(STREAMING_EXTENSION_ID)
+    )
+    if streaming_changed:
+        extensions[STREAMING_EXTENSION_ID] = streaming
+        await config_store.replace_settings(AppSettings(core=core, extensions=extensions))
 
 
 def _is_forwarded_header_allowed(header_name: str) -> bool:
@@ -131,9 +219,19 @@ def main() -> int:
     _setdefault_env("TOPOSYNC_STREAMING_ENGINE_CACHE_DIR", "/data/runtime")
     _setdefault_env("TOPOSYNC_AUTH_MODE", "home_assistant_hybrid")
     _setdefault_env("TOPOSYNC_AUTH_INGRESS_ROLE", "owner")
-    _setdefault_env("TOPOSYNC_AUTH_INGRESS_TRUSTED_IPS", "127.0.0.1,::1,172.30.32.2,testclient")
+    _setdefault_env(
+        "TOPOSYNC_AUTH_INGRESS_TRUSTED_IPS",
+        "127.0.0.1,::1,172.30.32.2,testclient",
+    )
     _setdefault_env("TOPOSYNC_AUTH_INGRESS_ENFORCE_TRUSTED", "1")
     _setdefault_env("TOPOSYNC_HOME_ASSISTANT_CONNECTION_MODE", "supervisor")
+    _setdefault_env("TOPOSYNC_EXTENSION_AUTO_INSTALL_ON_STARTUP", "1")
+    _setdefault_env("TOPOSYNC_STREAMING_PREFERRED_RTSP_PORT", str(STREAMING_RTSP_PORT))
+    _setdefault_env("TOPOSYNC_STREAMING_PREFERRED_HLS_PORT", str(STREAMING_HLS_PORT))
+    _setdefault_env("TOPOSYNC_STREAMING_PREFERRED_WEBRTC_PORT", str(STREAMING_WEBRTC_PORT))
+    _setdefault_env("TOPOSYNC_STREAMING_PREFERRED_API_PORT", str(STREAMING_API_PORT))
+
+    asyncio.run(_seed_toposync_config_defaults())
 
     threading.Thread(
         target=_run_direct_proxy,
