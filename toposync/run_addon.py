@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import ipaddress
 import json
 import os
 import subprocess
@@ -22,6 +23,7 @@ STREAMING_RTSP_PORT = 18758
 STREAMING_HLS_PORT = 18759
 STREAMING_WEBRTC_PORT = 18760
 STREAMING_API_PORT = 18761
+STREAMING_WEBRTC_ICE_UDP_PORT = 18762
 BACKEND_BASE_URL = f"http://127.0.0.1:{BACKEND_PORT}"
 STREAMING_EXTENSION_ID = "com.toposync.streaming"
 STREAMING_DEFAULT_PORTS = {
@@ -93,6 +95,10 @@ def _merge_streaming_addon_defaults(raw: Any) -> tuple[dict[str, Any], bool]:
         settings["engine"] = engine
         changed = True
 
+    if not isinstance(engine.get("expose_to_lan"), bool):
+        engine["expose_to_lan"] = True
+        changed = True
+
     preferred_ports = engine.get("preferred_ports")
     if not isinstance(preferred_ports, dict):
         preferred_ports = {}
@@ -108,6 +114,125 @@ def _merge_streaming_addon_defaults(raw: Any) -> tuple[dict[str, Any], bool]:
                 changed = True
 
     return settings, changed
+
+
+def _supervisor_network_info() -> dict[str, Any]:
+    token = str(os.getenv("SUPERVISOR_TOKEN") or "").strip()
+    if not token:
+        return {}
+    supervisor_url = str(os.getenv("SUPERVISOR") or "http://supervisor").strip().rstrip("/")
+    if not supervisor_url:
+        supervisor_url = "http://supervisor"
+
+    import urllib.request
+
+    request = urllib.request.Request(
+        f"{supervisor_url}/network/info",
+        headers={"Authorization": f"Bearer {token}", "Accept": "application/json"},
+    )
+    with urllib.request.urlopen(request, timeout=2.0) as response:  # noqa: S310
+        payload = json.loads(response.read().decode("utf-8"))
+    if isinstance(payload, dict) and isinstance(payload.get("data"), dict):
+        return payload["data"]
+    return payload if isinstance(payload, dict) else {}
+
+
+def _iter_network_addresses(value: Any) -> list[str]:
+    if isinstance(value, str):
+        return [value]
+    if isinstance(value, list):
+        out: list[str] = []
+        for item in value:
+            out.extend(_iter_network_addresses(item))
+        return out
+    if isinstance(value, dict):
+        out: list[str] = []
+        for key in ("ip_address", "address", "addresses"):
+            if key in value:
+                out.extend(_iter_network_addresses(value.get(key)))
+        ipv4 = value.get("ipv4")
+        if isinstance(ipv4, dict):
+            out.extend(_iter_network_addresses(ipv4))
+        return out
+    return []
+
+
+def _normalize_lan_host(raw: str) -> str:
+    text = str(raw or "").strip()
+    if not text:
+        return ""
+    try:
+        interface = ipaddress.ip_interface(text)
+        ip = interface.ip
+    except ValueError:
+        try:
+            ip = ipaddress.ip_address(text)
+        except ValueError:
+            return text
+    if ip.version != 4:
+        return ""
+    if ip.is_loopback or ip.is_link_local or ip.is_multicast or ip.is_unspecified:
+        return ""
+    return str(ip)
+
+
+def _resolve_addon_public_hosts() -> list[str]:
+    hosts: list[str] = []
+    seen: set[str] = set()
+
+    def add(raw: str) -> None:
+        host = _normalize_lan_host(raw)
+        if not host:
+            return
+        key = host.lower()
+        if key in seen:
+            return
+        seen.add(key)
+        hosts.append(host)
+
+    for item in str(os.getenv("TOPOSYNC_ADDON_PUBLIC_HOSTS") or "").replace(";", ",").split(","):
+        add(item)
+
+    try:
+        info = _supervisor_network_info()
+    except Exception as exc:  # noqa: BLE001
+        print(f"Toposync add-on: could not read Supervisor network info for WebRTC hosts: {exc}", flush=True)
+        info = {}
+
+    interfaces_raw = info.get("interfaces") if isinstance(info, dict) else None
+    if isinstance(interfaces_raw, dict):
+        interfaces = list(interfaces_raw.values())
+    elif isinstance(interfaces_raw, list):
+        interfaces = interfaces_raw
+    else:
+        interfaces = []
+
+    for item in interfaces:
+        if not isinstance(item, dict):
+            continue
+        if item.get("enabled") is False or item.get("connected") is False:
+            continue
+        for address in _iter_network_addresses(item):
+            add(address)
+
+    add("homeassistant.local")
+    return hosts
+
+
+def _seed_streaming_env_defaults() -> None:
+    _setdefault_env("TOPOSYNC_STREAMING_PREFERRED_RTSP_PORT", str(STREAMING_RTSP_PORT))
+    _setdefault_env("TOPOSYNC_STREAMING_PREFERRED_HLS_PORT", str(STREAMING_HLS_PORT))
+    _setdefault_env("TOPOSYNC_STREAMING_PREFERRED_WEBRTC_PORT", str(STREAMING_WEBRTC_PORT))
+    _setdefault_env("TOPOSYNC_STREAMING_PREFERRED_API_PORT", str(STREAMING_API_PORT))
+    _setdefault_env(
+        "TOPOSYNC_STREAMING_WEBRTC_LOCAL_UDP_ADDRESS",
+        f":{STREAMING_WEBRTC_ICE_UDP_PORT}",
+    )
+
+    if not os.getenv("TOPOSYNC_STREAMING_WEBRTC_ADDITIONAL_HOSTS"):
+        public_hosts = _resolve_addon_public_hosts()
+        if public_hosts:
+            os.environ["TOPOSYNC_STREAMING_WEBRTC_ADDITIONAL_HOSTS"] = ",".join(public_hosts)
 
 
 async def _seed_toposync_config_defaults() -> None:
@@ -175,6 +300,10 @@ def _create_direct_proxy_app():
             for name, value in request.headers.items()
             if _is_forwarded_header_allowed(name)
         ]
+        public_host = str(request.headers.get("host") or "").strip()
+        if public_host:
+            headers.append(("host", public_host))
+            headers.append(("x-forwarded-host", public_host))
         outbound = request.app.state.http.build_request(
             request.method,
             target,
@@ -226,10 +355,7 @@ def main() -> int:
     _setdefault_env("TOPOSYNC_AUTH_INGRESS_ENFORCE_TRUSTED", "1")
     _setdefault_env("TOPOSYNC_HOME_ASSISTANT_CONNECTION_MODE", "supervisor")
     _setdefault_env("TOPOSYNC_EXTENSION_AUTO_INSTALL_ON_STARTUP", "1")
-    _setdefault_env("TOPOSYNC_STREAMING_PREFERRED_RTSP_PORT", str(STREAMING_RTSP_PORT))
-    _setdefault_env("TOPOSYNC_STREAMING_PREFERRED_HLS_PORT", str(STREAMING_HLS_PORT))
-    _setdefault_env("TOPOSYNC_STREAMING_PREFERRED_WEBRTC_PORT", str(STREAMING_WEBRTC_PORT))
-    _setdefault_env("TOPOSYNC_STREAMING_PREFERRED_API_PORT", str(STREAMING_API_PORT))
+    _seed_streaming_env_defaults()
 
     asyncio.run(_seed_toposync_config_defaults())
 

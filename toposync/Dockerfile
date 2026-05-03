@@ -1,7 +1,7 @@
 ARG BUILD_ARCH
 FROM python:3.12-slim-bookworm
 
-ARG TOPOSYNC_PIP_SPEC=toposync-streaming==0.4.3
+ARG TOPOSYNC_PIP_SPEC=toposync-streaming==0.4.4
 ARG TOPOSYNC_ADDON_PIP_SPECS="fastapi httpx uvicorn"
 ARG TOPOSYNC_EXTENSION_PIP_SPECS=
 ARG TOPOSYNC_PIP_INDEX_URL=https://pypi.org/simple
@@ -42,6 +42,7 @@ PY
 COPY run_addon.py /usr/local/bin/run_addon.py
 
 EXPOSE 18756 18757 18758 18759 18760
+EXPOSE 18762/udp
 VOLUME ["/data"]
 
 ENTRYPOINT ["/usr/bin/tini", "-s", "--"]

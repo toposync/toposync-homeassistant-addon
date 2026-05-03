@@ -55,9 +55,10 @@ The add-on publishes the standard playback ports by default:
 18758/tcp: 18758
 18759/tcp: 18759
 18760/tcp: 18760
+18762/udp: 18762
 ```
 
-The add-on reserves the `18756-18761` range for Toposync services: `18756` direct access, `18757` ingress/backend, `18758` RTSP, `18759` HLS, `18760` WebRTC/WHEP, and `18761` for the internal MediaMTX API.
+The add-on reserves the `18756-18762` range for Toposync services: `18756` direct access, `18757` ingress/backend, `18758` RTSP, `18759` HLS, `18760` WebRTC/WHEP signaling, `18761` for the internal MediaMTX API, and `18762/udp` for WebRTC media transport.
 
 Open Toposync from the Home Assistant sidebar, enable the streaming engine, enable LAN exposure for the engine, and restart the engine. Use RTSP over TCP when possible.
 

@@ -19,11 +19,13 @@ ports:
   18758/tcp: 18758
   18759/tcp: 18759
   18760/tcp: 18760
+  18762/udp: 18762
 ports_description:
   18756/tcp: Toposync web interface and API for direct access and mobile apps.
   18758/tcp: Toposync RTSP streaming output.
   18759/tcp: Toposync HLS streaming output.
   18760/tcp: Toposync WebRTC/WHEP streaming output.
+  18762/udp: Toposync WebRTC media transport.
 arch:
   - amd64
   - aarch64
