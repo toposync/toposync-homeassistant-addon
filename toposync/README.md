@@ -11,6 +11,7 @@ Run Toposync inside Home Assistant with a sidebar app and automatic access to th
 - Connect to the internal Home Assistant Core API automatically.
 - Store persistent Toposync data in the add-on data directory.
 - Run under Home Assistant supervision and watchdog health checks.
+- Use Home Assistant Supervisor network information for ONVIF LAN discovery without requiring host networking.
 - Optionally expose a direct Toposync port for mobile apps and local-network access.
 - Optionally expose RTSP, HLS, and WebRTC/WHEP streaming outputs.
 

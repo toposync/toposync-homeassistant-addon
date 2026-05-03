@@ -1,5 +1,5 @@
 name: Toposync
-version: "0.4.2"
+version: "0.4.3"
 slug: toposync
 description: Run Toposync inside Home Assistant with ingress and internal Core API access.
 url: https://github.com/toposync/toposync-homeassistant-addon
@@ -12,6 +12,8 @@ ingress: true
 ingress_port: 18757
 ingress_stream: true
 homeassistant_api: true
+hassio_api: true
+hassio_role: default
 ports:
   18756/tcp: null
   18758/tcp: null

@@ -27,6 +27,7 @@ https://github.com/toposync/toposync-homeassistant-addon
 - The Home Assistant extension connects to the internal Core API automatically.
 - No Home Assistant host or long-lived access token needs to be configured inside Toposync.
 - Persistent Toposync data is stored in the add-on data directory.
+- ONVIF camera discovery can use Home Assistant Supervisor network information to scan the LAN while keeping the add-on off host networking.
 - A direct local-network port can be enabled for mobile apps and browser access outside the Home Assistant sidebar.
 - RTSP, HLS, and WebRTC/WHEP streaming playback ports can be enabled from the add-on network settings.
 
