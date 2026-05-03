@@ -1,7 +1,7 @@
 ARG BUILD_ARCH
 FROM python:3.12-slim-bookworm
 
-ARG TOPOSYNC_PIP_SPEC=toposync-streaming==0.3.6
+ARG TOPOSYNC_PIP_SPEC=toposync-streaming==0.4.0
 ARG TOPOSYNC_EXTENSION_PIP_SPECS=
 ARG TOPOSYNC_PIP_INDEX_URL=https://pypi.org/simple
 ARG TOPOSYNC_EXTRA_INDEX_URL=
