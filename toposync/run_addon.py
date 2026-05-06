@@ -271,20 +271,14 @@ def _is_forwarded_header_allowed(header_name: str) -> bool:
 
 
 def _create_direct_proxy_app():
-    from contextlib import asynccontextmanager
-
     import httpx
     from starlette.background import BackgroundTask
 
-    @asynccontextmanager
-    async def lifespan(app: FastAPI):
-        app.state.http = httpx.AsyncClient(timeout=None, follow_redirects=False)
-        try:
-            yield
-        finally:
-            await app.state.http.aclose()
+    app = FastAPI(title="Toposync direct access proxy")
 
-    app = FastAPI(title="Toposync direct access proxy", lifespan=lifespan)
+    async def _close_proxy_response(upstream: httpx.Response, client: httpx.AsyncClient) -> None:
+        await upstream.aclose()
+        await client.aclose()
 
     @app.api_route(
         "/{path:path}",
@@ -304,17 +298,25 @@ def _create_direct_proxy_app():
         if public_host:
             headers.append(("host", public_host))
             headers.append(("x-forwarded-host", public_host))
-        outbound = request.app.state.http.build_request(
-            request.method,
-            target,
-            headers=headers,
-            content=request.stream(),
-        )
-        upstream = await request.app.state.http.send(outbound, stream=True)
+
+        # Use a fresh client per request so httpx never shares auth cookies between direct clients.
+        client = httpx.AsyncClient(timeout=None, follow_redirects=False)
+        try:
+            outbound = client.build_request(
+                request.method,
+                target,
+                headers=headers,
+                content=request.stream(),
+            )
+            upstream = await client.send(outbound, stream=True)
+        except Exception:
+            await client.aclose()
+            raise
+
         response = StreamingResponse(
             upstream.aiter_raw(),
             status_code=upstream.status_code,
-            background=BackgroundTask(upstream.aclose),
+            background=BackgroundTask(_close_proxy_response, upstream, client),
         )
         response.raw_headers = [
             (name.encode("latin-1"), value.encode("latin-1"))
