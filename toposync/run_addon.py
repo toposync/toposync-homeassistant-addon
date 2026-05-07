@@ -95,10 +95,6 @@ def _merge_streaming_addon_defaults(raw: Any) -> tuple[dict[str, Any], bool]:
         settings["engine"] = engine
         changed = True
 
-    if not isinstance(engine.get("expose_to_lan"), bool):
-        engine["expose_to_lan"] = True
-        changed = True
-
     preferred_ports = engine.get("preferred_ports")
     if not isinstance(preferred_ports, dict):
         preferred_ports = {}

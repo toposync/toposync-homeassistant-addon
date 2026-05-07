@@ -28,8 +28,8 @@ https://github.com/toposync/toposync-homeassistant-addon
 - No Home Assistant host or long-lived access token needs to be configured inside Toposync.
 - Persistent Toposync data is stored in the add-on data directory.
 - ONVIF camera discovery can use Home Assistant Supervisor network information to scan the LAN while keeping the add-on off host networking.
-- A direct local-network port is exposed for mobile apps and browser access outside the Home Assistant sidebar.
-- RTSP, HLS, and WebRTC/WHEP streaming playback ports are exposed through the add-on network settings by default.
+- A direct local-network port can be enabled for mobile apps and browser access outside the Home Assistant sidebar.
+- RTSP, HLS, and WebRTC/WHEP streaming playback ports can be enabled through the add-on network settings.
 
 ## Access
 
@@ -37,7 +37,11 @@ The add-on is shown only to Home Assistant administrators in the Home Assistant 
 
 ## Direct Access
 
-The add-on exposes Toposync directly on the local network for mobile apps or browser access outside the Home Assistant sidebar.
+By default, the add-on exposes Toposync through Home Assistant ingress only. To expose Toposync directly on the local network for mobile apps or browser access outside the Home Assistant sidebar, map the direct access port in the add-on `Network` settings:
+
+```yaml
+18756/tcp: 18756
+```
 
 Open Toposync at `http://homeassistant.local:18756/` or `http://<home-assistant-ip>:18756/`.
 
@@ -49,7 +53,7 @@ The direct port is served through a local proxy that strips Home Assistant ingre
 
 The add-on installs the Toposync streaming bundle and system FFmpeg. Toposync downloads MediaMTX on demand when the streaming engine is started.
 
-The add-on publishes the standard playback ports by default:
+By default, streaming playback ports are declared but not published to the host. To expose streaming on the local network, map only the protocols you need in the add-on `Network` settings:
 
 ```yaml
 18758/tcp: 18758
@@ -58,11 +62,11 @@ The add-on publishes the standard playback ports by default:
 18762/udp: 18762
 ```
 
-The add-on reserves the `18756-18762` range for Toposync services: `18756` direct access, `18757` ingress/backend, `18758` RTSP, `18759` HLS, `18760` WebRTC/WHEP signaling, `18761` for the internal MediaMTX API, and `18762/udp` for WebRTC media transport.
+Recommended add-on ports stay in the `18756-18762` range when enabled: `18756` direct access, `18757` ingress/backend, `18758` RTSP, `18759` HLS, `18760` WebRTC/WHEP signaling, `18761` for the internal MediaMTX API, and `18762/udp` for WebRTC media transport. The MediaMTX API port is internal and is not published through add-on network settings.
 
-Open Toposync from the Home Assistant sidebar, enable the streaming engine, enable LAN exposure for the engine, and restart the engine. Use RTSP over TCP when possible.
+Open Toposync from the Home Assistant sidebar, enable the streaming engine, enable LAN exposure for the engine, map the required playback ports, and restart the engine. Use RTSP over TCP when possible. WebRTC playback from the LAN needs `18760/tcp` for WHEP signaling and `18762/udp` for media transport.
 
-If you do not want direct or streaming access from the local network, clear the corresponding port mappings in the add-on `Network` settings.
+Leave the corresponding host ports empty in the add-on `Network` settings when you do not want direct or streaming access from the local network.
 
 ## Extension-Ready Builds
 
