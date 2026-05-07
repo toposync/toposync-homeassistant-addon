@@ -216,6 +216,14 @@ def _resolve_addon_public_hosts() -> list[str]:
 
 
 def _seed_streaming_env_defaults() -> None:
+    _setdefault_env("TOPOSYNC_DEPLOYMENT_TARGET", "home_assistant_addon")
+    _setdefault_env("TOPOSYNC_EXPECTED_DIRECT_API_PORT", str(DIRECT_PROXY_PORT))
+    _setdefault_env("TOPOSYNC_EXPECTED_RTSP_PORT", str(STREAMING_RTSP_PORT))
+    _setdefault_env("TOPOSYNC_EXPECTED_HLS_PORT", str(STREAMING_HLS_PORT))
+    _setdefault_env("TOPOSYNC_EXPECTED_WEBRTC_PORT", str(STREAMING_WEBRTC_PORT))
+    _setdefault_env("TOPOSYNC_EXPECTED_WEBRTC_UDP_PORT", str(STREAMING_WEBRTC_ICE_UDP_PORT))
+    _setdefault_env("TOPOSYNC_FAIL_STREAM_URLS_ON_PORT_MISMATCH", "1")
+    _setdefault_env("TOPOSYNC_STREAMING_HLS_PUBLIC_MODE", "proxy")
     _setdefault_env("TOPOSYNC_STREAMING_PREFERRED_RTSP_PORT", str(STREAMING_RTSP_PORT))
     _setdefault_env("TOPOSYNC_STREAMING_PREFERRED_HLS_PORT", str(STREAMING_HLS_PORT))
     _setdefault_env("TOPOSYNC_STREAMING_PREFERRED_WEBRTC_PORT", str(STREAMING_WEBRTC_PORT))
