@@ -53,7 +53,7 @@ The direct port is served through a local proxy that strips Home Assistant ingre
 
 The add-on installs the Toposync streaming bundle and system FFmpeg. Toposync downloads MediaMTX on demand when the streaming engine is started.
 
-By default, streaming playback ports are declared but not published to the host. The web/mobile app uses HLS through the Toposync direct port (`18756`) at `/api/streams/media/hls/...`, so `18759/tcp` is not required for app HLS playback.
+By default, HLS playback is served through the Toposync direct/API port (`18756`) at `/api/streams/media/hls/...`. The MediaMTX HLS listener stays internal for the signed proxy and server-side probes, so `18759/tcp` is not part of the public add-on port contract.
 
 To expose direct streaming protocols on the local network, map only the protocols you need in the add-on `Network` settings:
 
@@ -63,7 +63,7 @@ To expose direct streaming protocols on the local network, map only the protocol
 18762/udp: 18762
 ```
 
-`18759/tcp` remains available as direct HLS advanced access or diagnostics, but mobile apps should use `18756/tcp`. Recommended add-on ports stay in the `18756-18762` range when enabled: `18756` direct access and proxied HLS, `18757` ingress/backend, `18758` RTSP, `18759` direct HLS diagnostics, `18760` WebRTC/WHEP signaling, `18761` for the internal MediaMTX API, and `18762/udp` for WebRTC media transport. The MediaMTX API port is internal and is not published through add-on network settings.
+Recommended add-on ports stay in the `18756-18762` range when enabled: `18756` direct access and proxied HLS, `18757` ingress/backend, `18758` RTSP diagnostics, `18760` WebRTC/WHEP signaling, `18761` for the internal MediaMTX API, and `18762/udp` for WebRTC media transport. The MediaMTX HLS/API ports are internal and are not published through default add-on network settings.
 
 Open Toposync from the Home Assistant sidebar, enable the streaming engine, enable LAN exposure for the engine, map the direct Toposync port for app HLS, and map RTSP/WebRTC ports only when those protocols are needed. Use RTSP over TCP when possible. WebRTC playback from the LAN needs `18760/tcp` for WHEP signaling and `18762/udp` for media transport.
 
