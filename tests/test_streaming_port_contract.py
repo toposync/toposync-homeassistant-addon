@@ -12,8 +12,8 @@ class StreamingPortContractTest(unittest.TestCase):
         config = (ROOT / "toposync" / "config.yaml").read_text(encoding="utf-8")
         dockerfile = (ROOT / "toposync" / "Dockerfile").read_text(encoding="utf-8")
 
-        self.assertIn('version: "0.4.9"', config)
-        self.assertIn("ARG TOPOSYNC_PIP_SPEC=toposync-streaming==0.4.9", dockerfile)
+        self.assertIn('version: "0.4.10"', config)
+        self.assertIn("ARG TOPOSYNC_PIP_SPEC=toposync-streaming==0.4.10", dockerfile)
 
     def test_config_exposes_streaming_ports_and_ingress_stream(self) -> None:
         config = (ROOT / "toposync" / "config.yaml").read_text(encoding="utf-8")
