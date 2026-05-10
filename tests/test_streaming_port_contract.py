@@ -1,7 +1,13 @@
 from __future__ import annotations
 
+import json
+import os
+import sys
+import tempfile
+import types
 import unittest
 from pathlib import Path
+from unittest import mock
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -38,6 +44,59 @@ class StreamingPortContractTest(unittest.TestCase):
         self.assertIn('if hls_public_mode != "proxy":', run_addon)
         self.assertIn('"TOPOSYNC_EXPECTED_HLS_PORT"', run_addon)
         self.assertIn('"TOPOSYNC_STREAMING_PREFERRED_HLS_PORT"', run_addon)
+
+    def test_supervisor_port_snapshot_records_published_network(self) -> None:
+        fake_fastapi = types.ModuleType("fastapi")
+        fake_fastapi.FastAPI = object
+        fake_fastapi.Request = object
+        fake_starlette_responses = types.ModuleType("starlette.responses")
+        fake_starlette_responses.StreamingResponse = object
+        with mock.patch.dict(
+            sys.modules,
+            {"fastapi": fake_fastapi, "starlette.responses": fake_starlette_responses},
+        ):
+            from toposync import run_addon
+
+        class FakeResponse:
+            def __enter__(self) -> "FakeResponse":
+                return self
+
+            def __exit__(self, *_args: object) -> None:
+                return None
+
+            def read(self) -> bytes:
+                return json.dumps(
+                    {
+                        "data": {
+                            "slug": "574b2a03_toposync",
+                            "version": "0.4.11",
+                            "ingress": True,
+                            "ingress_stream": True,
+                            "network": {
+                                "18756/tcp": 18756,
+                                "18758/tcp": 18758,
+                                "18760/tcp": 18760,
+                                "18762/udp": 18762,
+                            },
+                        }
+                    }
+                ).encode("utf-8")
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            snapshot_path = Path(temp_dir) / "addon-network.json"
+            with (
+                mock.patch.dict(os.environ, {"SUPERVISOR_TOKEN": "token", "SUPERVISOR": "http://supervisor"}),
+                mock.patch.object(run_addon, "ADDON_NETWORK_SNAPSHOT_PATH", snapshot_path),
+                mock.patch("urllib.request.urlopen", return_value=FakeResponse()) as urlopen_mock,
+            ):
+                run_addon._write_addon_network_snapshot()
+
+            url = str(urlopen_mock.call_args.args[0].full_url)
+            self.assertEqual(url, "http://supervisor/addons/self/info")
+            payload = json.loads(snapshot_path.read_text(encoding="utf-8"))
+            self.assertEqual(payload["network"]["18756/tcp"], 18756)
+            self.assertEqual(payload["network"]["18762/udp"], 18762)
+            self.assertTrue(payload["ingress_stream"])
 
 
 if __name__ == "__main__":

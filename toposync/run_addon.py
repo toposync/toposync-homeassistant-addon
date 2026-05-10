@@ -15,6 +15,7 @@ from starlette.responses import StreamingResponse
 
 
 OPTIONS_PATH = Path("/data/options.json")
+ADDON_NETWORK_SNAPSHOT_PATH = Path("/data/runtime/streaming/addon-network.json")
 
 # Keep the add-on in a project-owned port range instead of MediaMTX defaults.
 DIRECT_PROXY_PORT = 18756
@@ -112,7 +113,7 @@ def _merge_streaming_addon_defaults(raw: Any) -> tuple[dict[str, Any], bool]:
     return settings, changed
 
 
-def _supervisor_network_info() -> dict[str, Any]:
+def _supervisor_api_json(path: str) -> dict[str, Any]:
     token = str(os.getenv("SUPERVISOR_TOKEN") or "").strip()
     if not token:
         return {}
@@ -123,7 +124,7 @@ def _supervisor_network_info() -> dict[str, Any]:
     import urllib.request
 
     request = urllib.request.Request(
-        f"{supervisor_url}/network/info",
+        f"{supervisor_url}{path}",
         headers={"Authorization": f"Bearer {token}", "Accept": "application/json"},
     )
     with urllib.request.urlopen(request, timeout=2.0) as response:  # noqa: S310
@@ -131,6 +132,33 @@ def _supervisor_network_info() -> dict[str, Any]:
     if isinstance(payload, dict) and isinstance(payload.get("data"), dict):
         return payload["data"]
     return payload if isinstance(payload, dict) else {}
+
+
+def _supervisor_network_info() -> dict[str, Any]:
+    return _supervisor_api_json("/network/info")
+
+
+def _supervisor_addon_info() -> dict[str, Any]:
+    return _supervisor_api_json("/addons/self/info")
+
+
+def _write_addon_network_snapshot() -> None:
+    try:
+        addon_info = _supervisor_addon_info()
+        network = addon_info.get("network") if isinstance(addon_info, dict) else None
+        if not isinstance(network, dict):
+            network = {}
+        payload = {
+            "slug": addon_info.get("slug") if isinstance(addon_info, dict) else None,
+            "version": addon_info.get("version") if isinstance(addon_info, dict) else None,
+            "ingress": addon_info.get("ingress") if isinstance(addon_info, dict) else None,
+            "ingress_stream": addon_info.get("ingress_stream") if isinstance(addon_info, dict) else None,
+            "network": network,
+        }
+        ADDON_NETWORK_SNAPSHOT_PATH.parent.mkdir(parents=True, exist_ok=True)
+        ADDON_NETWORK_SNAPSHOT_PATH.write_text(json.dumps(payload, sort_keys=True), encoding="utf-8")
+    except Exception as exc:  # noqa: BLE001
+        print(f"Toposync add-on: could not write Supervisor port snapshot: {exc}", flush=True)
 
 
 def _iter_network_addresses(value: Any) -> list[str]:
@@ -217,6 +245,7 @@ def _resolve_addon_public_hosts() -> list[str]:
 
 def _seed_streaming_env_defaults() -> None:
     _setdefault_env("TOPOSYNC_DEPLOYMENT_TARGET", "home_assistant_addon")
+    _setdefault_env("TOPOSYNC_ADDON_NETWORK_SNAPSHOT_PATH", str(ADDON_NETWORK_SNAPSHOT_PATH))
     _setdefault_env("TOPOSYNC_EXPECTED_DIRECT_API_PORT", str(DIRECT_PROXY_PORT))
     _setdefault_env("TOPOSYNC_EXPECTED_RTSP_PORT", str(STREAMING_RTSP_PORT))
     _setdefault_env("TOPOSYNC_EXPECTED_WEBRTC_PORT", str(STREAMING_WEBRTC_PORT))
@@ -241,6 +270,8 @@ def _seed_streaming_env_defaults() -> None:
         public_hosts = _resolve_addon_public_hosts()
         if public_hosts:
             os.environ["TOPOSYNC_STREAMING_WEBRTC_ADDITIONAL_HOSTS"] = ",".join(public_hosts)
+
+    _write_addon_network_snapshot()
 
 
 async def _seed_toposync_config_defaults() -> None:
