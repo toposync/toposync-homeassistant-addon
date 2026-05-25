@@ -16,6 +16,7 @@ from starlette.responses import StreamingResponse
 
 OPTIONS_PATH = Path("/data/options.json")
 ADDON_NETWORK_SNAPSHOT_PATH = Path("/data/runtime/streaming/addon-network.json")
+GO2RTC_BINARY_PATH = Path("/usr/local/bin/go2rtc")
 
 # Keep the add-on in a project-owned port range instead of MediaMTX defaults.
 DIRECT_PROXY_PORT = 18756
@@ -251,6 +252,8 @@ def _seed_streaming_env_defaults() -> None:
     _setdefault_env("TOPOSYNC_EXPECTED_WEBRTC_PORT", str(STREAMING_WEBRTC_PORT))
     _setdefault_env("TOPOSYNC_EXPECTED_WEBRTC_UDP_PORT", str(STREAMING_WEBRTC_ICE_UDP_PORT))
     _setdefault_env("TOPOSYNC_FAIL_STREAM_URLS_ON_PORT_MISMATCH", "1")
+    if GO2RTC_BINARY_PATH.is_file():
+        _setdefault_env("TOPOSYNC_STREAMING_GO2RTC_PATH", str(GO2RTC_BINARY_PATH))
     hls_public_mode = str(os.getenv("TOPOSYNC_STREAMING_HLS_PUBLIC_MODE") or "proxy").strip().lower()
     if hls_public_mode not in {"direct", "proxy"}:
         hls_public_mode = "proxy"

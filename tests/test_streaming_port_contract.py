@@ -37,6 +37,41 @@ class StreamingPortContractTest(unittest.TestCase):
         self.assertIn("EXPOSE 18762/udp", dockerfile)
         self.assertNotIn("EXPOSE 18756 18757 18758 18759 18760", dockerfile)
 
+    def test_dockerfile_bundles_go2rtc_for_mse(self) -> None:
+        dockerfile = (ROOT / "toposync" / "Dockerfile").read_text(encoding="utf-8")
+
+        self.assertIn("ARG GO2RTC_VERSION=", dockerfile)
+        self.assertIn("ENV TOPOSYNC_STREAMING_GO2RTC_PATH=/usr/local/bin/go2rtc", dockerfile)
+        self.assertIn("from toposync_ext_streaming.streaming import GO2RTC_VERSION", dockerfile)
+        self.assertIn("go2rtc_linux_{arch}", dockerfile)
+        self.assertIn("amd64|x86_64) go2rtc_arch=\"amd64\"", dockerfile)
+        self.assertIn("aarch64|arm64) go2rtc_arch=\"arm64\"", dockerfile)
+
+    def test_startup_defaults_use_bundled_go2rtc_when_present(self) -> None:
+        fake_fastapi = types.ModuleType("fastapi")
+        fake_fastapi.FastAPI = object
+        fake_fastapi.Request = object
+        fake_starlette_responses = types.ModuleType("starlette.responses")
+        fake_starlette_responses.StreamingResponse = object
+        with mock.patch.dict(
+            sys.modules,
+            {"fastapi": fake_fastapi, "starlette.responses": fake_starlette_responses},
+        ):
+            from toposync import run_addon
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            binary_path = Path(temp_dir) / "go2rtc"
+            binary_path.write_bytes(b"")
+            snapshot_path = Path(temp_dir) / "addon-network.json"
+            with (
+                mock.patch.dict(os.environ, {}, clear=True),
+                mock.patch.object(run_addon, "GO2RTC_BINARY_PATH", binary_path),
+                mock.patch.object(run_addon, "ADDON_NETWORK_SNAPSHOT_PATH", snapshot_path),
+            ):
+                run_addon._seed_streaming_env_defaults()
+
+                self.assertEqual(os.environ["TOPOSYNC_STREAMING_GO2RTC_PATH"], str(binary_path))
+
     def test_proxy_mode_does_not_declare_hls_as_public_expected_port(self) -> None:
         run_addon = (ROOT / "toposync" / "run_addon.py").read_text(encoding="utf-8")
 
