@@ -11,6 +11,7 @@ Run Toposync inside Home Assistant with a sidebar app and automatic access to th
 - Connect to the internal Home Assistant Core API automatically.
 - Store persistent Toposync data in the add-on data directory.
 - Run under Home Assistant supervision and watchdog health checks.
+- Support `amd64` and 64-bit ARM Home Assistant OS (`aarch64` / `linux/arm64`).
 - Use Home Assistant Supervisor network information for ONVIF LAN discovery without requiring host networking.
 - Enable a direct Toposync port for mobile apps and local-network access when needed.
 - Enable RTSP and WebRTC/WHEP streaming outputs through add-on network settings when needed. HLS for the web/mobile app uses the main Toposync port through an internal proxy.
@@ -58,3 +59,9 @@ Recommended add-on ports stay in the `18756-18762` range when enabled: `18756` d
 Open Toposync from the Home Assistant sidebar, enable the streaming engine, enable LAN exposure for the engine, map the direct Toposync port for app/web HLS, and map RTSP/WebRTC ports only when those protocols are needed. Mobile browsers and direct-IP access should stay stable through signed HLS on `18756/tcp`. RTSP clients should prefer TCP transport. WebRTC is only needed for low-latency dashboard/PTZ usage; playback from the LAN needs `18760/tcp` for WHEP signaling, `18762/udp` for media transport, and the browser host/IP covered by `TOPOSYNC_STREAMING_WEBRTC_ADDITIONAL_HOSTS` or `TOPOSYNC_ADDON_PUBLIC_HOSTS`.
 
 Leave the corresponding host ports empty in the add-on `Network` settings when you do not want direct or streaming access from the local network.
+
+## Package and Architecture
+
+This add-on version installs `toposync-streaming==0.7.2`. The add-on version can differ from the Python package version because Home Assistant tracks the container package separately.
+
+The ARM support target is `aarch64`. The 32-bit architectures `armv7`, `armhf` and `i386` are outside the support target. Raspberry Pi 5 with 8 GB RAM and NVMe storage is the practical baseline for camera/vision workloads; use a separate Toposync processing server for multiple cameras, heavy OpenCV work or ONNX Runtime CPU inference.

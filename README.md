@@ -24,6 +24,7 @@ https://github.com/toposync/toposync-homeassistant-addon
 - Toposync runs as a supervised Home Assistant add-on.
 - The Toposync UI is available from the Home Assistant sidebar.
 - UI and API are served through Home Assistant ingress.
+- The add-on supports `amd64` and 64-bit ARM Home Assistant OS (`aarch64` / `linux/arm64`).
 - The Home Assistant extension connects to the internal Core API automatically.
 - No Home Assistant host or long-lived access token needs to be configured inside Toposync.
 - Persistent Toposync data is stored in the add-on data directory.
@@ -75,7 +76,15 @@ Leave the corresponding host ports empty in the add-on `Network` settings when y
 
 ## Extension-Ready Builds
 
-The image installs the current Toposync streaming bundle by default. Future extension packages can be preinstalled at build time with the `TOPOSYNC_EXTENSION_PIP_SPECS` build argument, while runtime extension auto-install remains enabled so managed extensions can be restored after add-on updates.
+The image installs `toposync-streaming==0.7.2` by default. The Home Assistant add-on has its own version number, currently `0.7.3`, because Home Assistant tracks the add-on package separately from the Python package installed inside the image.
+
+Future extension packages can be preinstalled at build time with the `TOPOSYNC_EXTENSION_PIP_SPECS` build argument, while runtime extension auto-install remains enabled so managed extensions can be restored after add-on updates.
+
+## ARM64 Notes
+
+The supported ARM target is 64-bit Home Assistant OS on `aarch64`. The unsupported 32-bit architectures `armv7`, `armhf` and `i386` are outside the Toposync add-on support target.
+
+Raspberry Pi 5 with 8 GB RAM and NVMe storage is the practical baseline for a modern camera/vision deployment. Raspberry Pi 4 and SD-card installs are best-effort for compatibility. Delegate multiple cameras, OpenCV-heavy processing and ONNX Runtime CPU inference to a separate Toposync processing server when possible.
 
 ## Storage
 
