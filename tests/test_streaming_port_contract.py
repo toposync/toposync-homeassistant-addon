@@ -18,8 +18,8 @@ class StreamingPortContractTest(unittest.TestCase):
         config = (ROOT / "toposync" / "config.yaml").read_text(encoding="utf-8")
         dockerfile = (ROOT / "toposync" / "Dockerfile").read_text(encoding="utf-8")
 
-        self.assertIn('version: "0.7.4"', config)
-        self.assertIn("ARG TOPOSYNC_PIP_SPEC=toposync-streaming==0.7.3", dockerfile)
+        self.assertIn('version: "0.7.5"', config)
+        self.assertIn("ARG TOPOSYNC_PIP_SPEC=toposync-streaming==0.7.4", dockerfile)
         self.assertIn("  - amd64", config)
         self.assertIn("  - aarch64", config)
 
@@ -106,7 +106,7 @@ class StreamingPortContractTest(unittest.TestCase):
                     {
                         "data": {
                             "slug": "574b2a03_toposync",
-                            "version": "0.7.4",
+                            "version": "0.7.5",
                             "ingress": True,
                             "ingress_stream": True,
                             "network": {
