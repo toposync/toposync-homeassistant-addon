@@ -1,5 +1,5 @@
 name: Toposync
-version: "0.7.5"
+version: "0.7.6"
 slug: toposync
 description: Run Toposync inside Home Assistant with ingress and internal Core API access.
 url: https://github.com/toposync/toposync-homeassistant-addon
