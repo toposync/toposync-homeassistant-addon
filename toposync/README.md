@@ -62,6 +62,6 @@ Leave the corresponding host ports empty in the add-on `Network` settings when y
 
 ## Package and Architecture
 
-This add-on version installs `toposync-streaming==0.7.6`. The add-on version can differ from the Python package version because Home Assistant tracks the container package separately.
+This add-on version installs `toposync-streaming==0.7.7`. The add-on version can differ from the Python package version because Home Assistant tracks the container package separately.
 
 The ARM support target is `aarch64`. The 32-bit architectures `armv7`, `armhf` and `i386` are outside the support target. Raspberry Pi 5 with 8 GB RAM and NVMe storage is the practical baseline for camera/vision workloads; use a separate Toposync processing server for multiple cameras, heavy OpenCV work or ONNX Runtime CPU inference.
