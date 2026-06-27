@@ -4,7 +4,7 @@ FROM python:3.12-slim-bookworm
 ARG BUILD_ARCH
 ARG TARGETARCH
 ARG GO2RTC_VERSION=
-ARG TOPOSYNC_PIP_SPEC=toposync-streaming==0.7.7
+ARG TOPOSYNC_PIP_SPEC=toposync-streaming==0.7.8
 ARG TOPOSYNC_ADDON_PIP_SPECS="fastapi httpx uvicorn"
 ARG TOPOSYNC_EXTENSION_PIP_SPECS=
 ARG TOPOSYNC_PIP_INDEX_URL=https://pypi.org/simple
