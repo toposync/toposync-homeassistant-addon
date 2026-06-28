@@ -76,7 +76,7 @@ Leave the corresponding host ports empty in the add-on `Network` settings when y
 
 ## Extension-Ready Builds
 
-The image installs `toposync-streaming==0.7.9` by default. The Home Assistant add-on has its own version number, currently `0.7.9`, because Home Assistant tracks the add-on package separately from the Python package installed inside the image.
+The image installs `toposync-streaming==0.7.10` by default. The Home Assistant add-on release is kept in lockstep with the Toposync Python package version.
 
 Future extension packages can be preinstalled at build time with the `TOPOSYNC_EXTENSION_PIP_SPECS` build argument, while runtime extension auto-install remains enabled so managed extensions can be restored after add-on updates.
 
