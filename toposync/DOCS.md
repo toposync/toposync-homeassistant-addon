@@ -14,7 +14,7 @@ TopoSync runs inside Home Assistant as a supervised add-on.
 
 Start the add-on, then open `Toposync` from the sidebar. The Home Assistant extension is configured automatically by the add-on runtime.
 
-The add-on installs `toposync-streaming==0.7.10`. The add-on release is kept in lockstep with the Toposync Python package version.
+The add-on installs `toposync-streaming==0.8.0`. The add-on release is kept in lockstep with the Toposync Python package version.
 
 ## Access
 
