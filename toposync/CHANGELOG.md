@@ -1,10 +1,10 @@
 # Changelog
 
-## 0.9.1 - 2026-10-17
+## 0.10.0 - 2026-10-17
 
 - Rename the store and sidebar entry to TopoSync Full Application to distinguish it from TopoSync Remote Instance.
 - Add English and Brazilian Portuguese network descriptions and installation guidance.
-- Keep the application package at `toposync-streaming==0.9.0`; this release only updates add-on metadata and documentation.
+- Install `toposync-streaming==0.10.0`, including authenticated remote ingress support and HLS preference for remote connections. Existing full add-on authentication remains unchanged.
 
 ## 0.9.0 - 2026-10-16
 

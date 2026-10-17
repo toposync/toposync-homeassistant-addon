@@ -8,7 +8,7 @@ Para instalar a aplicação completa dentro do Home Assistant, escolha **TopoSyn
 
 ## 1. Prepare a instância remota
 
-Use uma versão do TopoSync que implemente o acesso autenticado em `/api/auth/ingress-proxy`. O complemento verifica esse suporte antes de encaminhar as requisições. Uma versão publicada antiga com o mesmo número não garante compatibilidade.
+Use o TopoSync **0.10.0 ou mais recente**, que implementa o acesso autenticado em `/api/auth/ingress-proxy`. O complemento verifica esse suporte antes de encaminhar as requisições. Uma versão publicada antiga com o mesmo número não garante compatibilidade.
 
 Antes de ativar a autenticação híbrida, acesse o TopoSync diretamente por uma conexão protegida e crie uma conta local proprietária. Ela permite recuperar o acesso quando o Home Assistant estiver indisponível. A criação inicial da conta pelo acesso direto fica desativada no modo híbrido.
 

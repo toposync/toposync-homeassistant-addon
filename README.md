@@ -87,7 +87,7 @@ Leave the corresponding host ports empty in the add-on `Network` settings when y
 
 ## Extension-Ready Builds
 
-The image installs `toposync-streaming==0.9.0` by default. This add-on release uses Toposync 0.9.0; add-on metadata updates have their own version.
+The image installs `toposync-streaming==0.10.0` by default. This add-on release uses Toposync 0.10.0; add-on metadata updates have their own version.
 
 Future extension packages can be preinstalled at build time with the `TOPOSYNC_EXTENSION_PIP_SPECS` build argument, while runtime extension auto-install remains enabled so managed extensions can be restored after add-on updates.
 

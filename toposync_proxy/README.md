@@ -14,4 +14,4 @@ Install this add-on from the existing TopoSync repository, configure the server 
 - No TopoSync package, inference engine, camera configuration or application data is installed here.
 - Supported architectures: `amd64` and `aarch64`.
 
-The remote TopoSync build must support authenticated ingress proxy. Older builds are rejected rather than trusted by source address alone. Installing this add-on does not upgrade or configure the external server.
+The remote instance requires TopoSync **0.10.0 or newer** with authenticated ingress proxy support. Older builds are rejected rather than trusted by source address alone. Installing this add-on does not upgrade or configure the external server.

@@ -6,7 +6,7 @@ This add-on connects to TopoSync already installed elsewhere. It does not instal
 
 ## Prepare the remote TopoSync server
 
-Use a TopoSync build containing the authenticated ingress proxy endpoint `/api/auth/ingress-proxy`. The add-on checks this contract before forwarding each request, including WebSocket connections. A version number alone does not establish support; a build without the endpoint or without the token configuration is rejected.
+Use TopoSync **0.10.0 or newer**, containing the authenticated ingress proxy endpoint `/api/auth/ingress-proxy`. The add-on checks this contract before forwarding each request, including WebSocket connections. A version number alone does not establish support; a build without the endpoint or without the token configuration is rejected.
 
 Before enabling hybrid authentication, open TopoSync directly over a protected connection and create a local owner account. Keep this account for recovery when Home Assistant is unavailable. Hybrid mode disables first-time account creation through direct access.
 

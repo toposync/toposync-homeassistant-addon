@@ -1,5 +1,5 @@
 name: TopoSync Full Application
-version: "0.9.1"
+version: "0.10.0"
 slug: toposync
 description: Install and run the complete TopoSync application inside Home Assistant, including processing and local data.
 url: https://github.com/toposync/toposync-homeassistant-addon/tree/main/toposync
