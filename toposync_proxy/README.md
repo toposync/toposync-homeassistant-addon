@@ -1,12 +1,12 @@
 # TopoSync Remote Instance
 
-[English setup](DOCS.md) · [Guia em português](DOCS.pt-BR.md)
+[English setup](https://github.com/toposync/toposync-homeassistant-addon/blob/main/toposync_proxy/DOCS.md) · [Guia em português](https://github.com/toposync/toposync-homeassistant-addon/blob/main/toposync_proxy/DOCS.pt-BR.md)
 
 Open a remote TopoSync instance from the Home Assistant sidebar. TopoSync keeps running on your Ubuntu server, another computer, or another virtual machine on the same host.
 
 This add-on installs only the connection to your remote instance. You do not need **TopoSync Full Application** alongside it.
 
-Install this add-on from the existing TopoSync repository, configure the server address and proxy credential, then select **Open Web UI**. See [Setup](DOCS.md) for the required server authentication settings.
+Install this add-on from the existing TopoSync repository, configure the server address and proxy credential, then select **Open Web UI**. See [Setup](https://github.com/toposync/toposync-homeassistant-addon/blob/main/toposync_proxy/DOCS.md) for the required server authentication settings.
 
 - Ingress authenticates Home Assistant administrators and preserves each user's identity.
 - HTTPS certificate verification is always enabled.

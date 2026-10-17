@@ -1,6 +1,6 @@
 # TopoSync Remote Instance — Instância remota
 
-[English setup](DOCS.md)
+[English setup](https://github.com/toposync/toposync-homeassistant-addon/blob/main/toposync_proxy/DOCS.md)
 
 Este complemento instala **somente o acesso a uma instância TopoSync já instalada em outro lugar**. Processamento, câmeras, arquivos e atualizações permanecem nessa instância. Não é necessário instalar **TopoSync Full Application** junto dele. “Remota” também inclui outra máquina virtual no mesmo computador físico.
 

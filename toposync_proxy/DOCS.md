@@ -1,6 +1,6 @@
 # TopoSync Remote Instance — Setup
 
-[Guia em português](DOCS.pt-BR.md)
+[Guia em português](https://github.com/toposync/toposync-homeassistant-addon/blob/main/toposync_proxy/DOCS.pt-BR.md)
 
 This add-on connects to TopoSync already installed elsewhere. It does not install the application, copy its data or manage its updates. You do not need the full application add-on. “Remote” also includes another virtual machine on the same physical host.
 
