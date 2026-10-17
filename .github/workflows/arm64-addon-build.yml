@@ -20,20 +20,56 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     strategy:
+      fail-fast: false
       matrix:
         platform: [linux/amd64, linux/arm64]
     steps:
       - uses: actions/checkout@v4
       - uses: docker/setup-qemu-action@v3
       - uses: docker/setup-buildx-action@v3
+      - name: Select exact Toposync wheels from TestPyPI
+        if: inputs.package_index == 'https://test.pypi.org/simple/'
+        id: test-packages
+        run: |
+          python3 - <<'PYTHON'
+          import json
+          import os
+          import re
+          import urllib.parse
+          import urllib.request
+          from pathlib import Path
+
+          version = re.search(r"^ARG TOPOSYNC_PIP_SPEC=toposync-streaming==(.+)$", Path("toposync/Dockerfile").read_text(), re.M)[1]
+          packages = [
+              "toposync-core", "toposync", "toposync-streaming",
+              "toposync-ext-structural", "toposync-ext-models", "toposync-ext-home-assistant",
+              "toposync-ext-images", "toposync-ext-cameras", "toposync-ext-ptz-attention",
+              "toposync-ext-vision", "toposync-ext-spatial-video",
+              "toposync-ext-cinematic", "toposync-ext-streaming",
+          ]
+          specs = ["fastapi", "httpx", "uvicorn"]
+          for package in packages:
+              with urllib.request.urlopen(f"https://test.pypi.org/pypi/{package}/{version}/json", timeout=30) as response:
+                  release = json.load(response)
+              assert release["info"]["version"] == version
+              wheels = [item for item in release["urls"] if item["packagetype"] == "bdist_wheel" and not item["yanked"]]
+              assert len(wheels) == 1, package
+              wheel = wheels[0]
+              url = urllib.parse.urlsplit(wheel["url"])
+              assert url.scheme == "https" and url.hostname.endswith(".pythonhosted.org")
+              digest = wheel["digests"]["sha256"]
+              assert re.fullmatch(r"[a-f0-9]{64}", digest)
+              specs.append(f"{wheel['url']}#sha256={digest}")
+          with open(os.environ["GITHUB_OUTPUT"], "a") as output:
+              output.write("specs=" + " ".join(specs) + "\n")
+          PYTHON
       - name: Build full application image
         env:
-          PACKAGE_INDEX: ${{ inputs.package_index }}
+          ADDON_PIP_SPECS: ${{ steps.test-packages.outputs.specs || 'fastapi httpx uvicorn' }}
           PLATFORM: ${{ matrix.platform }}
         run: |
           docker buildx build --platform "$PLATFORM" \
-            --build-arg "TOPOSYNC_PIP_INDEX_URL=$PACKAGE_INDEX" \
-            --build-arg TOPOSYNC_EXTRA_INDEX_URL=https://pypi.org/simple/ \
+            --build-arg "TOPOSYNC_ADDON_PIP_SPECS=$ADDON_PIP_SPECS" \
             -t local/toposync-addon --load ./toposync
       - name: Check installed application version
         env:
