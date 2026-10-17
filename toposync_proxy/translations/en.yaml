@@ -1,0 +1,21 @@
+configuration:
+  server_url:
+    name: Remote instance address
+    description: >-
+      Required. Address of an existing TopoSync instance, for example
+      https://toposync.example.com:8443. It must be reachable from this add-on.
+      Do not include a username, password or path. localhost points to this add-on,
+      even when TopoSync runs on the same physical machine.
+  proxy_token:
+    name: Remote instance access token
+    description: >-
+      Required. Paste the same dedicated credential configured in
+      TOPOSYNC_AUTH_INGRESS_PROXY_TOKEN on the remote instance
+      (32–256 letters, digits, underscores or hyphens).
+      This is not a Home Assistant token. See Documentation for server setup.
+  allow_http:
+    name: Allow HTTP over an encrypted private tunnel
+    description: >-
+      Leave disabled to require HTTPS with a valid certificate. Enable only if
+      an existing encrypted private tunnel protects the entire connection.
+      An ordinary local network does not encrypt the access token.

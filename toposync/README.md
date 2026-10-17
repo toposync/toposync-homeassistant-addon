@@ -1,4 +1,6 @@
-# Toposync Home Assistant Add-on
+# TopoSync Full Application
+
+This add-on installs and runs the complete application, with processing and data inside Home Assistant. To access an existing installation elsewhere, choose **TopoSync Remote Instance** instead; it is available in the same repository.
 
 ![Toposync](logo.png)
 
@@ -18,7 +20,7 @@ Run Toposync inside Home Assistant with a sidebar app and automatic access to th
 
 ## After Installation
 
-Start the add-on and open `Toposync` from the Home Assistant sidebar. The Home Assistant connection is managed automatically; no manual host or long-lived access token is required.
+Start the add-on and open **TopoSync Full Application** from the Home Assistant sidebar. The Home Assistant connection is managed automatically; no manual host or long-lived access token is required.
 
 ## Access
 
@@ -62,6 +64,6 @@ Leave the corresponding host ports empty in the add-on `Network` settings when y
 
 ## Package and Architecture
 
-This add-on version installs `toposync-streaming==0.9.0`. The add-on release is kept in lockstep with the Toposync Python package version.
+This add-on version installs `toposync-streaming==0.9.0`. This add-on release uses Toposync 0.9.0; add-on metadata updates have their own version.
 
 The ARM support target is `aarch64`. The 32-bit architectures `armv7`, `armhf` and `i386` are outside the support target. Raspberry Pi 5 with 8 GB RAM and NVMe storage is the practical baseline for camera/vision workloads; use a separate Toposync processing server for multiple cameras, heavy OpenCV work or ONNX Runtime CPU inference.

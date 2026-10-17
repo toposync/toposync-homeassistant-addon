@@ -1,0 +1,5 @@
+network:
+  18756/tcp: TopoSync interface and API for direct access, mobile applications and HLS video. Not needed for the sidebar.
+  18758/tcp: Optional RTSP streaming output.
+  18760/tcp: Optional WebRTC/WHEP signaling.
+  18762/udp: Optional WebRTC media transport.

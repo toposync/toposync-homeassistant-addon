@@ -26,7 +26,6 @@ jobs:
         run: |
           docker buildx build \
             --platform linux/arm64 \
-            --build-arg TOPOSYNC_PIP_SPEC=toposync-streaming==0.7.2 \
             -t local/toposync-addon-arm64 \
             --load \
             ./toposync

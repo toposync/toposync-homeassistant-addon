@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.9.1 - 2026-10-17
+
+- Rename the store and sidebar entry to TopoSync Full Application to distinguish it from TopoSync Remote Instance.
+- Add English and Brazilian Portuguese network descriptions and installation guidance.
+- Keep the application package at `toposync-streaming==0.9.0`; this release only updates add-on metadata and documentation.
+
 ## 0.9.0 - 2026-10-16
 
 - Install `toposync-streaming==0.9.0`, keeping the add-on and application versions aligned.

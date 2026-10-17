@@ -1,11 +1,11 @@
-name: Toposync
-version: "0.9.0"
+name: TopoSync Full Application
+version: "0.9.1"
 slug: toposync
-description: Run Toposync inside Home Assistant with ingress and internal Core API access.
-url: https://github.com/toposync/toposync-homeassistant-addon
+description: Install and run the complete TopoSync application inside Home Assistant, including processing and local data.
+url: https://github.com/toposync/toposync-homeassistant-addon/tree/main/toposync
 startup: application
 boot: auto
-panel_title: Toposync
+panel_title: TopoSync Full Application
 panel_icon: mdi:vector-polyline
 panel_admin: true
 ingress: true

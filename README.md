@@ -1,10 +1,21 @@
-# Toposync Home Assistant Add-on
+# TopoSync Home Assistant Add-ons
 
 ![Toposync](toposync/logo.png)
 
-Run Toposync inside Home Assistant with a sidebar app, ingress, supervised execution, and automatic access to the Home Assistant Core API.
+Install the complete application in Home Assistant, or connect Home Assistant to an existing remote instance.
 
-## Installation
+## Choose an add-on
+
+- **TopoSync Full Application** installs and runs the complete application inside Home Assistant, with automatic access to the internal Home Assistant API.
+- **TopoSync Remote Instance** opens an existing external TopoSync server in the sidebar. Use it when the application runs on Ubuntu/Docker, including a GPU server or another virtual machine on the same physical host. See [proxy setup](toposync_proxy/DOCS.md) for the required server authentication and protected network connection.
+
+Both add-ons are available from this repository. Install **one** for the deployment you want: the remote instance add-on does not require the full application add-on. “Remote” means installed outside this add-on, including another virtual machine on the same physical host. The connection add-on has its own version and does not install or upgrade the remote instance.
+
+**Em português:** escolha **TopoSync Full Application** para instalar e executar a aplicação completa no Home Assistant. Escolha **TopoSync Remote Instance** para acessar uma instância já instalada em outro lugar. Processamento e dados continuam nessa instância. [Guia da instância remota em português](toposync_proxy/DOCS.pt-BR.md).
+
+## Install the full application
+
+For an existing remote instance, follow the [remote instance setup guide](toposync_proxy/DOCS.md). The remaining sections describe the full application add-on.
 
 1. Open Home Assistant.
 2. Go to `Settings` -> `Add-ons` -> `Add-on Store`.
@@ -15,9 +26,9 @@ Run Toposync inside Home Assistant with a sidebar app, ingress, supervised execu
 https://github.com/toposync/toposync-homeassistant-addon
 ```
 
-5. Find `Toposync` in the add-on store.
+5. Find **TopoSync Full Application** in the add-on store.
 6. Install and start the add-on.
-7. Open `Toposync` from the Home Assistant sidebar.
+7. Open **TopoSync Full Application** from the Home Assistant sidebar.
 
 ## What It Provides
 
@@ -76,7 +87,7 @@ Leave the corresponding host ports empty in the add-on `Network` settings when y
 
 ## Extension-Ready Builds
 
-The image installs `toposync-streaming==0.9.0` by default. The Home Assistant add-on release is kept in lockstep with the Toposync Python package version.
+The image installs `toposync-streaming==0.9.0` by default. This add-on release uses Toposync 0.9.0; add-on metadata updates have their own version.
 
 Future extension packages can be preinstalled at build time with the `TOPOSYNC_EXTENSION_PIP_SPECS` build argument, while runtime extension auto-install remains enabled so managed extensions can be restored after add-on updates.
 

@@ -1,0 +1,21 @@
+configuration:
+  server_url:
+    name: Endereço da instância remota
+    description: >-
+      Obrigatório. Endereço de uma instância TopoSync já instalada, por exemplo
+      https://toposync.example.com:8443. Deve ser acessível a partir deste complemento.
+      Não inclua usuário, senha ou caminho. localhost aponta para este complemento,
+      mesmo quando o TopoSync está na mesma máquina física.
+  proxy_token:
+    name: Credencial de acesso à instância remota
+    description: >-
+      Obrigatório. Cole a mesma credencial dedicada configurada em
+      TOPOSYNC_AUTH_INGRESS_PROXY_TOKEN na instância remota
+      (32–256 letras, números, sublinhados ou hífens).
+      Não é um token do Home Assistant. Consulte Documentação para preparar o servidor.
+  allow_http:
+    name: Permitir HTTP por túnel privado criptografado
+    description: >-
+      Mantenha desativado para exigir HTTPS com certificado válido. Ative somente
+      se um túnel privado já existente criptografar toda a conexão.
+      Uma rede local comum não criptografa a credencial de acesso.
