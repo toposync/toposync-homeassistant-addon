@@ -60,15 +60,21 @@ jobs:
               digest = wheel["digests"]["sha256"]
               assert re.fullmatch(r"[a-f0-9]{64}", digest)
               specs.append(f"{wheel['url']}#sha256={digest}")
+              if package == "toposync-streaming":
+                  root_spec = specs.pop()
           with open(os.environ["GITHUB_OUTPUT"], "a") as output:
               output.write("specs=" + " ".join(specs) + "\n")
+              output.write("root_spec=" + root_spec + "\n")
           PYTHON
       - name: Build full application image
         env:
+          ROOT_PIP_SPEC: ${{ steps.test-packages.outputs.root_spec }}
           ADDON_PIP_SPECS: ${{ steps.test-packages.outputs.specs || 'fastapi httpx uvicorn' }}
           PLATFORM: ${{ matrix.platform }}
         run: |
+          root_spec="${ROOT_PIP_SPEC:-$(sed -n 's/^ARG TOPOSYNC_PIP_SPEC=//p' toposync/Dockerfile)}"
           docker buildx build --platform "$PLATFORM" \
+            --build-arg "TOPOSYNC_PIP_SPEC=$root_spec" \
             --build-arg "TOPOSYNC_ADDON_PIP_SPECS=$ADDON_PIP_SPECS" \
             -t local/toposync-addon --load ./toposync
       - name: Check installed application version
