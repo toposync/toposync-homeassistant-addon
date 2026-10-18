@@ -24,12 +24,12 @@ http {
         "~*^pt(?:-|,|;|$)" pt-BR;
     }
     map $proxy_language $authentication_error {
-        default "TopoSync Remote Instance: access denied.\nCheck the access token, trusted source address and Home Assistant user. See Documentation in the add-on.\n";
-        pt-BR "TopoSync — Instância remota: acesso negado.\nConfira a credencial de acesso, o endereço de origem permitido e o usuário do Home Assistant. Consulte Documentação no complemento.\n";
+        default "Toposync Remote Instance: access denied.\nCheck the access token, trusted source address and Home Assistant user. See Documentation in the add-on.\n";
+        pt-BR "Toposync — Instância remota: acesso negado.\nConfira a credencial de acesso, o endereço de origem permitido e o usuário do Home Assistant. Consulte Documentação no complemento.\n";
     }
     map $proxy_language $connection_error {
-        default "TopoSync Remote Instance: connection unavailable.\nCheck the remote instance address, network and HTTPS certificate. The server must support authenticated ingress proxy. See Documentation in the add-on, then reload this page.\n";
-        pt-BR "TopoSync — Instância remota: conexão indisponível.\nConfira o endereço da instância remota, a rede e o certificado HTTPS. O servidor precisa oferecer suporte ao proxy autenticado de Ingress. Consulte Documentação no complemento e recarregue esta página.\n";
+        default "Toposync Remote Instance: connection unavailable.\nCheck the remote instance address, network and HTTPS certificate. The server must support authenticated ingress proxy. See Documentation in the add-on, then reload this page.\n";
+        pt-BR "Toposync — Instância remota: conexão indisponível.\nConfira o endereço da instância remota, a rede e o certificado HTTPS. O servidor precisa oferecer suporte ao proxy autenticado de Ingress. Consulte Documentação no complemento e recarregue esta página.\n";
     }
     server {
         listen 127.0.0.1:8098;

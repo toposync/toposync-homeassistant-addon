@@ -1,5 +1,5 @@
 network:
-  18756/tcp: Interface e API do TopoSync para acesso direto, aplicativos móveis e vídeo HLS. Desnecessária para a barra lateral.
+  18756/tcp: Interface e API do Toposync para acesso direto, aplicativos móveis e vídeo HLS. Desnecessária para a barra lateral.
   18758/tcp: Saída opcional de transmissões RTSP.
   18760/tcp: Sinalização opcional de WebRTC/WHEP.
   18762/udp: Transporte opcional de mídia WebRTC.

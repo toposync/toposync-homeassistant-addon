@@ -2,10 +2,10 @@ configuration:
   server_url:
     name: Remote instance address
     description: >-
-      Required. Address of an existing TopoSync instance, for example
+      Required. Address of an existing Toposync instance, for example
       https://toposync.example.com:8443. It must be reachable from this add-on.
       Do not include a username, password or path. localhost points to this add-on,
-      even when TopoSync runs on the same physical machine.
+      even when Toposync runs on the same physical machine.
   proxy_token:
     name: Remote instance access token
     description: >-

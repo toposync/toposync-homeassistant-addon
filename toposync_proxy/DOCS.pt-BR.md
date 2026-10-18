@@ -1,16 +1,16 @@
-# TopoSync Remote Instance — Instância remota
+# Toposync Remote Instance — Instância remota
 
 [English setup](https://github.com/toposync/toposync-homeassistant-addon/blob/main/toposync_proxy/DOCS.md)
 
-Este complemento instala **somente o acesso a uma instância TopoSync já instalada em outro lugar**. Processamento, câmeras, arquivos e atualizações permanecem nessa instância. Não é necessário instalar **TopoSync Full Application** junto dele. “Remota” também inclui outra máquina virtual no mesmo computador físico.
+Este complemento instala **somente o acesso a uma instância Toposync já instalada em outro lugar**. Processamento, câmeras, arquivos e atualizações permanecem nessa instância. Não é necessário instalar **Toposync Full Application** junto dele. “Remota” também inclui outra máquina virtual no mesmo computador físico.
 
-Para instalar a aplicação completa dentro do Home Assistant, escolha **TopoSync Full Application** na mesma loja.
+Para instalar a aplicação completa dentro do Home Assistant, escolha **Toposync Full Application** na mesma loja.
 
 ## 1. Prepare a instância remota
 
-Use o TopoSync **0.10.0 ou mais recente**, que implementa o acesso autenticado em `/api/auth/ingress-proxy`. O complemento verifica esse suporte antes de encaminhar as requisições. Uma versão publicada antiga com o mesmo número não garante compatibilidade.
+Use o Toposync **0.10.0 ou mais recente**, que implementa o acesso autenticado em `/api/auth/ingress-proxy`. O complemento verifica esse suporte antes de encaminhar as requisições. Uma versão publicada antiga com o mesmo número não garante compatibilidade.
 
-Antes de ativar a autenticação híbrida, acesse o TopoSync diretamente por uma conexão protegida e crie uma conta local proprietária. Ela permite recuperar o acesso quando o Home Assistant estiver indisponível. A criação inicial da conta pelo acesso direto fica desativada no modo híbrido.
+Antes de ativar a autenticação híbrida, acesse o Toposync diretamente por uma conexão protegida e crie uma conta local proprietária. Ela permite recuperar o acesso quando o Home Assistant estiver indisponível. A criação inicial da conta pelo acesso direto fica desativada no modo híbrido.
 
 Gere uma credencial dedicada em um computador confiável:
 
@@ -29,17 +29,17 @@ environment:
   FORWARDED_ALLOW_IPS: ""
 ```
 
-Preencha `TOPOSYNC_INGRESS_PROXY_TOKEN` com a credencial gerada. Preencha `TOPOSYNC_INGRESS_PROXY_SOURCE` com o endereço de origem efetivamente visto pelo TopoSync: pode ser o Home Assistant, a passagem de rede do Docker ou outro proxy HTTPS. Use somente os endereços necessários, separados por vírgulas; `*` é rejeitado. A credencial continua obrigatória mesmo quando vários clientes compartilham esse endereço.
+Preencha `TOPOSYNC_INGRESS_PROXY_TOKEN` com a credencial gerada. Preencha `TOPOSYNC_INGRESS_PROXY_SOURCE` com o endereço de origem efetivamente visto pelo Toposync: pode ser o Home Assistant, a passagem de rede do Docker ou outro proxy HTTPS. Use somente os endereços necessários, separados por vírgulas; `*` é rejeitado. A credencial continua obrigatória mesmo quando vários clientes compartilham esse endereço.
 
-`FORWARDED_ALLOW_IPS: ""` mantém o endereço real da conexão na verificação. Se houver outro proxy HTTPS antes do TopoSync, ele deve encaminhar o domínio configurado para o servidor correto e preservar `X-Forwarded-Host`, `X-Forwarded-Proto`, `X-Ingress-Path`, `X-Toposync-Ingress-Token` e os três cabeçalhos `X-Remote-User-Id`, `X-Remote-User-Name` e `X-Remote-User-Display-Name`. Restrinja os pontos de acesso e não registre credenciais ou endereços de mídia assinados nos logs.
+`FORWARDED_ALLOW_IPS: ""` mantém o endereço real da conexão na verificação. Se houver outro proxy HTTPS antes do Toposync, ele deve encaminhar o domínio configurado para o servidor correto e preservar `X-Forwarded-Host`, `X-Forwarded-Proto`, `X-Ingress-Path`, `X-Toposync-Ingress-Token` e os três cabeçalhos `X-Remote-User-Id`, `X-Remote-User-Name` e `X-Remote-User-Display-Name`. Restrinja os pontos de acesso e não registre credenciais ou endereços de mídia assinados nos logs.
 
 ## 2. Instale e configure o complemento
 
-Adicione `https://github.com/toposync/toposync-homeassistant-addon` aos repositórios da loja, instale **TopoSync Remote Instance** e abra **Configuração**.
+Adicione `https://github.com/toposync/toposync-homeassistant-addon` aos repositórios da loja, instale **Toposync Remote Instance** e abra **Configuração**.
 
 | Campo | O que preencher |
 | --- | --- |
-| **Endereço da instância remota** (`server_url`) | Obrigatório. Exemplo: `https://toposync.example.com:8443`. Use somente a origem, sem usuário, senha, caminho, parâmetros ou fragmento. O TopoSync precisa estar servido em `/`. |
+| **Endereço da instância remota** (`server_url`) | Obrigatório. Exemplo: `https://toposync.example.com:8443`. Use somente a origem, sem usuário, senha, caminho, parâmetros ou fragmento. O Toposync precisa estar servido em `/`. |
 | **Credencial de acesso à instância remota** (`proxy_token`) | Obrigatório. A mesma credencial de `TOPOSYNC_AUTH_INGRESS_PROXY_TOKEN`, com 32–256 letras, números, sublinhados ou hífens. Não use o token do Home Assistant. |
 | **Permitir HTTP por túnel privado criptografado** (`allow_http`) | Deixe desativado para exigir HTTPS válido. Ative somente quando um túnel privado existente proteger toda a conexão. Uma rede local comum não criptografa a credencial. |
 
@@ -47,9 +47,9 @@ Os dois campos obrigatórios começam vazios porque dependem da sua instalação
 
 O certificado HTTPS deve ser confiável pelas autoridades do sistema e corresponder ao nome do servidor. Esta versão não permite desativar essa verificação nem cadastrar uma autoridade própria.
 
-Salve, inicie o complemento e selecione **Abrir interface web**. Ative **Mostrar na barra lateral** se desejar. A entrada será **TopoSync Remote Instance**. Os nomes da loja e da barra lateral permanecem em inglês; os campos acompanham o idioma do Home Assistant, e os erros de conexão acompanham o idioma principal do navegador. Há traduções em inglês e português brasileiro.
+Salve, inicie o complemento e selecione **Abrir interface web**. Ative **Mostrar na barra lateral** se desejar. A entrada será **Toposync Remote**. Os nomes da loja e da barra lateral permanecem em inglês; os campos acompanham o idioma do Home Assistant, e os erros de conexão acompanham o idioma principal do navegador. Há traduções em inglês e português brasileiro.
 
-Não é necessário publicar portas. O acesso é restrito a administradores do Home Assistant; eles recebem o papel proprietário (`owner`) no TopoSync por padrão. Não há mapeamento individual de permissões nesta versão. O acesso direto ao TopoSync continua usando as contas locais.
+Não é necessário publicar portas. O acesso é restrito a administradores do Home Assistant; eles recebem o papel proprietário (`owner`) no Toposync por padrão. Não há mapeamento individual de permissões nesta versão. O acesso direto ao Toposync continua usando as contas locais.
 
 ## 3. Arquivos, vídeo e operação
 
@@ -57,7 +57,7 @@ Interface, arquivos, consultas, transmissões HLS, eventos contínuos e WebSocke
 
 Parar, atualizar ou desinstalar este complemento não para o processamento remoto nem apaga seus dados. O backup do Home Assistant inclui as opções e a credencial do complemento, mas **não os dados remotos**. Proteja o backup e faça uma cópia independente dos dados da instância.
 
-A extensão Home Assistant do TopoSync requer seu próprio endereço e credencial de API. Este complemento não exporta a credencial do Supervisor nem configura entidades, GPU, Samba ou servidores de mídia.
+A extensão Home Assistant do Toposync requer seu próprio endereço e credencial de API. Este complemento não exporta a credencial do Supervisor nem configura entidades, GPU, Samba ou servidores de mídia.
 
 ## Se não conectar
 

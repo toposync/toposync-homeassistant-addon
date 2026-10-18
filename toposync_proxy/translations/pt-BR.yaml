@@ -2,10 +2,10 @@ configuration:
   server_url:
     name: Endereço da instância remota
     description: >-
-      Obrigatório. Endereço de uma instância TopoSync já instalada, por exemplo
+      Obrigatório. Endereço de uma instância Toposync já instalada, por exemplo
       https://toposync.example.com:8443. Deve ser acessível a partir deste complemento.
       Não inclua usuário, senha ou caminho. localhost aponta para este complemento,
-      mesmo quando o TopoSync está na mesma máquina física.
+      mesmo quando o Toposync está na mesma máquina física.
   proxy_token:
     name: Credencial de acesso à instância remota
     description: >-

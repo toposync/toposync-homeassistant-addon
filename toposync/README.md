@@ -1,6 +1,6 @@
-# TopoSync Full Application
+# Toposync Full Application
 
-This add-on installs and runs the complete application, with processing and data inside Home Assistant. To access an existing installation elsewhere, choose **TopoSync Remote Instance** instead; it is available in the same repository.
+This add-on installs and runs the complete application, with processing and data inside Home Assistant. To access an existing installation elsewhere, choose **Toposync Remote Instance** instead; it is available in the same repository.
 
 ![Toposync](logo.png)
 
@@ -20,7 +20,7 @@ Run Toposync inside Home Assistant with a sidebar app and automatic access to th
 
 ## After Installation
 
-Start the add-on and open **TopoSync Full Application** from the Home Assistant sidebar. The Home Assistant connection is managed automatically; no manual host or long-lived access token is required.
+Start the add-on and open **Toposync Full Application** from the Home Assistant sidebar. The Home Assistant connection is managed automatically; no manual host or long-lived access token is required.
 
 ## Access
 

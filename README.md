@@ -1,4 +1,4 @@
-# TopoSync Home Assistant Add-ons
+# Toposync Home Assistant Add-ons
 
 ![Toposync](toposync/logo.png)
 
@@ -6,12 +6,12 @@ Install the complete application in Home Assistant, or connect Home Assistant to
 
 ## Choose an add-on
 
-- **TopoSync Full Application** installs and runs the complete application inside Home Assistant, with automatic access to the internal Home Assistant API.
-- **TopoSync Remote Instance** opens an existing external TopoSync server in the sidebar. Use it when the application runs on Ubuntu/Docker, including a GPU server or another virtual machine on the same physical host. See [proxy setup](toposync_proxy/DOCS.md) for the required server authentication and protected network connection.
+- **Toposync Full Application** installs and runs the complete application inside Home Assistant, with automatic access to the internal Home Assistant API.
+- **Toposync Remote Instance** opens an existing external Toposync server in the sidebar. Use it when the application runs on Ubuntu/Docker, including a GPU server or another virtual machine on the same physical host. See [proxy setup](toposync_proxy/DOCS.md) for the required server authentication and protected network connection.
 
 Both add-ons are available from this repository. Install **one** for the deployment you want: the remote instance add-on does not require the full application add-on. “Remote” means installed outside this add-on, including another virtual machine on the same physical host. The connection add-on has its own version and does not install or upgrade the remote instance.
 
-**Em português:** escolha **TopoSync Full Application** para instalar e executar a aplicação completa no Home Assistant. Escolha **TopoSync Remote Instance** para acessar uma instância já instalada em outro lugar. Processamento e dados continuam nessa instância. [Guia da instância remota em português](toposync_proxy/DOCS.pt-BR.md).
+**Em português:** escolha **Toposync Full Application** para instalar e executar a aplicação completa no Home Assistant. Escolha **Toposync Remote Instance** para acessar uma instância já instalada em outro lugar. Processamento e dados continuam nessa instância. [Guia da instância remota em português](toposync_proxy/DOCS.pt-BR.md).
 
 ## Install the full application
 
@@ -26,9 +26,9 @@ For an existing remote instance, follow the [remote instance setup guide](toposy
 https://github.com/toposync/toposync-homeassistant-addon
 ```
 
-5. Find **TopoSync Full Application** in the add-on store.
+5. Find **Toposync Full Application** in the add-on store.
 6. Install and start the add-on.
-7. Open **TopoSync Full Application** from the Home Assistant sidebar.
+7. Open **Toposync Full Application** from the Home Assistant sidebar.
 
 ## What It Provides
 
@@ -99,7 +99,7 @@ Raspberry Pi 5 with 8 GB RAM and NVMe storage is the practical baseline for a mo
 
 ## Storage
 
-TopoSync stores its application data under `/data` inside the add-on container. Home Assistant manages that directory as add-on data.
+Toposync stores its application data under `/data` inside the add-on container. Home Assistant manages that directory as add-on data.
 
 ## GPU Support
 
@@ -107,7 +107,7 @@ This add-on uses the standard CPU package. CUDA/GPU acceleration is not enabled 
 
 ## Project
 
-TopoSync main project:
+Toposync main project:
 
 ```text
 https://github.com/toposync/toposync

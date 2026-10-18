@@ -1,12 +1,12 @@
-# TopoSync Full Application
+# Toposync Full Application
 
-This add-on installs and runs the complete application, with processing and data inside Home Assistant. To access an existing installation elsewhere, choose **TopoSync Remote Instance** instead; it is available in the same repository.
+This add-on installs and runs the complete application, with processing and data inside Home Assistant. To access an existing installation elsewhere, choose **Toposync Remote Instance** instead; it is available in the same repository.
 
-TopoSync runs inside Home Assistant as a supervised add-on.
+Toposync runs inside Home Assistant as a supervised add-on.
 
 ## What You Get
 
-- A **TopoSync Full Application** entry in the Home Assistant sidebar.
+- A **Toposync Full Application** entry in the Home Assistant sidebar.
 - UI and API access through Home Assistant ingress.
 - Automatic connection to the internal Home Assistant Core API.
 - Persistent application data stored in `/data`.
@@ -14,7 +14,7 @@ TopoSync runs inside Home Assistant as a supervised add-on.
 
 ## Usage
 
-Start the add-on, then open **TopoSync Full Application** from the sidebar. The Home Assistant extension is configured automatically by the add-on runtime.
+Start the add-on, then open **Toposync Full Application** from the sidebar. The Home Assistant extension is configured automatically by the add-on runtime.
 
 The add-on installs `toposync-streaming==0.10.0`. This add-on release uses Toposync 0.10.0; add-on metadata updates have their own version.
 

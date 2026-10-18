@@ -1,11 +1,11 @@
 FROM ghcr.io/home-assistant/base:3.24
 
-ARG BUILD_VERSION=0.1.1
+ARG BUILD_VERSION=0.1.2
 LABEL io.hass.version="${BUILD_VERSION}" \
       io.hass.type="app" \
       io.hass.arch="amd64|aarch64" \
-      org.opencontainers.image.title="TopoSync Remote Instance" \
-      org.opencontainers.image.description="Connect Home Assistant to an existing TopoSync instance." \
+      org.opencontainers.image.title="Toposync Remote Instance" \
+      org.opencontainers.image.description="Connect Home Assistant to an existing Toposync instance." \
       org.opencontainers.image.source="https://github.com/toposync/toposync-homeassistant-addon"
 
 RUN apk add --no-cache nginx python3 ca-certificates

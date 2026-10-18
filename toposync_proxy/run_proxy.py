@@ -131,7 +131,7 @@ def main() -> None:
             writer.write(config)
     except (OSError, json.JSONDecodeError, UnicodeError):
         print(
-            "TopoSync Remote Instance: cannot read options or write runtime configuration. "
+            "Toposync Remote Instance: cannot read options or write runtime configuration. "
             "Check the saved configuration and add-on storage.",
             file=sys.stderr,
         )
@@ -139,7 +139,7 @@ def main() -> None:
     except ValueError as error:
         # Validation messages are fixed text and never include option values.
         print(
-            f"TopoSync Remote Instance: {error}. Open Configuration, correct the field and restart.",
+            f"Toposync Remote Instance: {error}. Open Configuration, correct the field and restart.",
             file=sys.stderr,
         )
         raise SystemExit(1) from None
