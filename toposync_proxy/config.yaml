@@ -1,5 +1,5 @@
 name: Toposync Remote Instance
-version: "0.1.2"
+version: "0.11.0"
 slug: toposync_proxy
 description: Access an existing Toposync instance installed elsewhere. Only the connection runs here; processing and data stay remote.
 url: https://github.com/toposync/toposync-homeassistant-addon/tree/main/toposync_proxy

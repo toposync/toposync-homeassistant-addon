@@ -9,7 +9,7 @@ Install the complete application in Home Assistant, or connect Home Assistant to
 - **Toposync Full Application** installs and runs the complete application inside Home Assistant, with automatic access to the internal Home Assistant API.
 - **Toposync Remote Instance** opens an existing external Toposync server in the sidebar. Use it when the application runs on Ubuntu/Docker, including a GPU server or another virtual machine on the same physical host. See [proxy setup](toposync_proxy/DOCS.md) for the required server authentication and protected network connection.
 
-Both add-ons are available from this repository. Install **one** for the deployment you want: the remote instance add-on does not require the full application add-on. “Remote” means installed outside this add-on, including another virtual machine on the same physical host. The connection add-on has its own version and does not install or upgrade the remote instance.
+Both add-ons are available from this repository. Install **one** for the deployment you want: the remote instance add-on does not require the full application add-on. “Remote” means installed outside this add-on, including another virtual machine on the same physical host. Both add-ons share the Toposync release version; the connection add-on does not install or upgrade the remote instance.
 
 **Em português:** escolha **Toposync Full Application** para instalar e executar a aplicação completa no Home Assistant. Escolha **Toposync Remote Instance** para acessar uma instância já instalada em outro lugar. Processamento e dados continuam nessa instância. [Guia da instância remota em português](toposync_proxy/DOCS.pt-BR.md).
 
@@ -87,7 +87,7 @@ Leave the corresponding host ports empty in the add-on `Network` settings when y
 
 ## Extension-Ready Builds
 
-The image installs `toposync-streaming==0.10.0` by default. This add-on release uses Toposync 0.10.0; add-on metadata updates have their own version.
+The image installs `toposync-streaming==0.11.0` by default. The application and both add-ons share release version 0.11.0.
 
 Future extension packages can be preinstalled at build time with the `TOPOSYNC_EXTENSION_PIP_SPECS` build argument, while runtime extension auto-install remains enabled so managed extensions can be restored after add-on updates.
 

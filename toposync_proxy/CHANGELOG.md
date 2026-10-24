@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.11.0 - 2026-10-24
+
+- Align the Remote Instance add-on version with Toposync and the Full Application add-on.
+- Retain authenticated ingress, verified HTTPS, streaming and WebSocket forwarding. This release does not install or upgrade the external Toposync server.
+
 ## 0.1.2 - 2026-10-18
 
 - Correct the Toposync brand spelling in the store, documentation, translations and connection errors.

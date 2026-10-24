@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.11.0 - 2026-10-24
+
+- Install toposync-streaming 0.11.0 with passive pipeline inspection, visual sensors, automatic activity history and image sequence playback.
+- Include updated camera tracking, streaming fallback and privacy controls.
+- Align the application and both add-ons at 0.11.0. Back up application data before upgrading; separately installed processing servers must be updated separately.
+
 ## 0.10.1 - 2026-10-18
 
 - Correct the Toposync brand spelling in the store, sidebar, documentation and translations.
